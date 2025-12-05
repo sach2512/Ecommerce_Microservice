@@ -29,7 +29,7 @@ namespace ProductService.API
 
             // Add DbContext
             builder.Services.AddDbContext<ProductDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("ProductDbConnection")));
 
             // Register repositories
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();

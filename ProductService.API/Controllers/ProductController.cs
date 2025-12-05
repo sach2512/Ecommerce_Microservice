@@ -6,7 +6,7 @@ using ProductService.Application.Interfaces;
 namespace ProductService.Api.Controllers
 {
     [ApiController]
-    [Route("api/products")]
+    [Route("api/product")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -18,7 +18,8 @@ namespace ProductService.Api.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("getall")]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)

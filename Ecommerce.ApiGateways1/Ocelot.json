@@ -1,0 +1,88 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7203"
+  },
+  "Routes": [
+    {
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "patch" ],
+      "UpstreamPathTemplate": "/user/{everything}",
+      "DownstreamPathTemplate": "/api/user/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7269
+        }
+      ]
+    },
+    //api/product/getall
+    //api/prodct/getbyid
+    //https://localhost:7203/products/product/getall
+    {
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "patch" ],
+      "UpstreamPathTemplate": "/products/{everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7234
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/orders/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+
+      // Downstream path mapping to your OrderService API.
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+
+      // The internal host and port for OrderService
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7082
+        }
+      ]
+
+    },
+    {
+      "UpstreamPathTemplate": "/payments/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+
+      // Internal mapping for PaymentService APIs.
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+
+      // PaymentService host and port.
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7154
+        }
+      ]
+
+    },
+    {
+      "UpstreamPathTemplate": "/notifications/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete", "Patch" ],
+
+      // Downstream route for NotificationService.
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+
+      // Internal endpoint for NotificationService.
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7192
+        }
+      ]
+
+    }
+  ]
+}
+
+//api/user/register
+  //api/user/sendconfirmation
