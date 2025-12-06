@@ -41,7 +41,7 @@ namespace Ecommerce.ApiGateways1.Middleware
             .Select(q => $"{q.Key.ToLowerInvariant()}={q.Value}")
                 .ToList();
 
-            var cachedkey = $"{ reqPath} {method}{queryParams}";
+            var cachedkey = $"{ reqPath}{method}{queryParams}";
             var cachedvalue = await _cache.GetStringAsync(cachedkey);
             // cachedvalue just doesnt return key but return alredy cached resposn eavaible in reddis
             if (!string.IsNullOrEmpty(cachedvalue))
