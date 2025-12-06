@@ -23,6 +23,7 @@ namespace UserService.API.Controllers
         [HttpPost("register")]
         [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), (int)HttpStatusCode.BadRequest)]
+      
         public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
         {
             try

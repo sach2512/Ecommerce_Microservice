@@ -1,0 +1,45 @@
+{
+  "ReverseProxy": {
+    "Routes": [
+      {
+        "RouteId": "UserRoute",
+        "ClusterId": "UserService",
+        "Match": {
+          "Path": "/User/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/User" },
+          { "PathPrefix": "/api" }
+        ]
+      },
+      {
+        "RouteId": "ProductRoute",
+        "ClusterId": "ProductService",
+        "Match": {
+          "Path": "/Product/{**catch-all}"
+        },
+        "Transforms": [
+          { "PathRemovePrefix": "/Product" },
+          { "PathPrefix": "/api" }
+        ]
+      }
+    ],
+
+    "Clusters": {
+      "UserService": {
+        "Destinations": {
+          "UserApi": {
+            "Address": "https://localhost:7269"
+          }
+        }
+      },
+      "ProductService": {
+        "Destinations": {
+          "ProductApi": {
+            "Address": "https://localhost:7270"
+          }
+        }
+      }
+    }
+  }
+}

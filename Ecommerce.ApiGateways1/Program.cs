@@ -33,7 +33,9 @@ builder.Services
             )
         };
     });
-
+builder.Configuration.AddJsonFile("ReverseProxy.Json", optional: false, reloadOnChange: true);
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 // Load compression settings
 var settings = builder.Configuration.GetSection("CompressionSettings").Get<CompressionSettings>();
 
@@ -99,6 +101,7 @@ app.UseAuthorization();
 app.MapGet("/", () => "Hello World!");
 
 // Ocelot
-await app.UseOcelot();
+//await app.UseOcelot();
+app.MapReverseProxy();
 
 app.Run();
