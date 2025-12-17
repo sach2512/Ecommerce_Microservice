@@ -1,3 +1,7 @@
+using Consul;
+using Ecommerce.Common.ServiceDiscovery.Configuration;
+using Ecommerce.Common.ServiceDiscovery.Registrations;
+using Ecommerce.Common.ServiceDiscovery.Resolver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -70,7 +74,23 @@ namespace OrderService.API
                 };
             });
 
+            builder.Services.Configure<ConsulConfig>(builder.Configuration.GetSection("Consul"));
+            builder.Services.AddSingleton<IconsulServiceResolver, consulServiceResolver>();
+            builder.Services.AddHostedService<ConsulRegistrationHostedService>();
+            builder.Services.AddSingleton<IConsulClient>(sp =>
+            {
+                return new ConsulClient(c =>
+                {
+                    c.Address = new Uri("http://localhost:8500");
+                });
+            });
+
+
             var app = builder.Build();
+            app.MapGet("/health", () =>
+            {
+                return ("ok");
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

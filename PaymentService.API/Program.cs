@@ -1,3 +1,7 @@
+using Consul;
+using Ecommerce.Common.ServiceDiscovery.Configuration;
+using Ecommerce.Common.ServiceDiscovery.Registrations;
+using Ecommerce.Common.ServiceDiscovery.Resolver;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +67,16 @@ namespace PaymentService.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]!))
                 };
             });
+            builder.Services.Configure<ConsulConfig>(builder.Configuration.GetSection("Consul"));
+            builder.Services.AddSingleton<IconsulServiceResolver, consulServiceResolver>();
+            builder.Services.AddHostedService<ConsulRegistrationHostedService>();
+            builder.Services.AddSingleton<IConsulClient>(sp =>
+            {
+                return new ConsulClient(c =>
+                {
+                    c.Address = new Uri("http://localhost:8500");
+                });
+            });
 
             var app = builder.Build();
 
@@ -72,7 +86,10 @@ namespace PaymentService.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.MapGet("/health", () =>
+            {
+                return ("ok");
+            });
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

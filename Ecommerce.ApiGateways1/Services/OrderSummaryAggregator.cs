@@ -18,6 +18,7 @@ namespace Ecommerce.ApiGateways1.Services
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger _logger;
        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly string  baseurl = $"/api";
 
 

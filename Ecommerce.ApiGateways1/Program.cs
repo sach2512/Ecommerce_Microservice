@@ -1,6 +1,10 @@
+using Consul;
 using Ecommerce.ApiGateways1.Middleware;
 using Ecommerce.ApiGateways1.Models;
 using Ecommerce.ApiGateways1.Services;
+using Ecommerce.Common.ServiceDiscovery.Configuration;
+using Ecommerce.Common.ServiceDiscovery.Registrations;
+using Ecommerce.Common.ServiceDiscovery.Resolver;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
@@ -43,25 +47,25 @@ var settings = builder.Configuration.GetSection("CompressionSettings").Get<Compr
 var urls = builder.Configuration.GetSection("ServiceUrls");
 
 // Register named HttpClients
-builder.Services.AddHttpClient("OrderService", c =>
-{
-    c.BaseAddress = new Uri(urls["OrderService"]!);
-});
+//builder.Services.AddHttpClient("OrderService", c =>
+//{
+//    c.BaseAddress = new Uri(urls["OrderService"]!);
+//});
 
-builder.Services.AddHttpClient("UserService", c =>
-{
-    c.BaseAddress = new Uri(urls["UserService"]!);
-});
+//builder.Services.AddHttpClient("UserService", c =>
+//{
+//    c.BaseAddress = new Uri(urls["UserService"]!);
+//});
 
-builder.Services.AddHttpClient("ProductService", c =>
-{
-    c.BaseAddress = new Uri(urls["ProductService"]!);
-});
+//builder.Services.AddHttpClient("ProductService", c =>
+//{
+//    c.BaseAddress = new Uri(urls["ProductService"]!);
+//});
 
-builder.Services.AddHttpClient("PaymentService", c =>
-{
-    c.BaseAddress = new Uri(urls["PaymentService"]!);
-});
+//builder.Services.AddHttpClient("PaymentService", c =>
+//{
+//    c.BaseAddress = new Uri(urls["PaymentService"]!);
+//});
 
 // Register aggregator
 builder.Services.AddSingleton<IOrderSummaryAggregator, OrderSummaryAggregator>();
@@ -96,9 +100,19 @@ app.UseMiddleware<JwtAuthenticationMiddleware>();
 app.UseMiddleware<ResponseCachingMiddleware>();
 // Authorization (global)
 app.UseAuthorization();
-
+builder.Services.Configure<ConsulConfig>(builder.Configuration.GetSection("Consul"));
+builder.Services.AddSingleton<IconsulServiceResolver, consulServiceResolver>();
+builder.Services.AddHostedService<ConsulRegistrationHostedService>();
+builder.Services.AddSingleton<IConsulClient>(sp =>
+{
+    return new ConsulClient(c =>
+    {
+        c.Address = new Uri("http://localhost:8500");
+    });
+});
 // Test root route
 app.MapGet("/", () => "Hello World!");
+app.MapGet("/Health", () => "ok!");
 
 // Ocelot
 //await app.UseOcelot();
